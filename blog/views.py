@@ -1,14 +1,14 @@
 from multiprocessing import context
 from tkinter import N
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PostForm
 from .models import Post
-
+from django.template.defaultfilters import slugify
 # Create your views here.
 
 
 def post_list(request):
-    qs = Post.objects.all()
+    qs = Post.objects.filter(status="p")
     context = {
         "object_list":qs
     }
@@ -31,3 +31,35 @@ def post_create(request):
         'form':form
     }
     return render(request, "blog/post_create.html",context)
+
+
+def post_detail(request, slug):
+    obj = get_object_or_404(Post, slug = slug)
+    context = {
+    'object':obj
+    }
+    return render(request, "blog/post_detail.html",context)
+
+def post_update(request,slug):
+    #Post.objects.get(slug=lerafsdf-dgdfg-fghfg-h )
+    obj = get_object_or_404(Post, slug=slug) # bu slugtakileri bul bana  listele demek
+    #if req pos ise yerine bunu kullandık
+    form = PostForm(request.POST or None, request.FILES or None, instance=obj)
+    if form.is_valid():
+        form.save()
+        return redirect("blog:list")
+    context={
+        "object":obj,
+        "form":form
+    }
+    return render(request, "blog/post_update.html", context)
+
+def post_delete(request,slug):
+    obj = get_object_or_404(Post, slug=slug)
+    if request.method == "POST":
+        obj.delete()
+        return redirect("blog:list")
+    context = {
+        "object": obj,
+        }
+    return render(request, "blog/post_delete.html", context)

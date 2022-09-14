@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %} 
+
+
+{% block content %}
+  
+<p>Are you sure delete {{object.title}}</p>
+   <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <button type="submit"><a href="{%url 'blog:list'%}">Cancel</a></button>
+        <button type="submit">Yes</button>
+
+    </form>
+{% endblock content %}

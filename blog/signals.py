@@ -1,4 +1,5 @@
 import imp
+from .utils import get_random_code
 
 #oluşturtuğum postu kaydetmeden önce bana slug oluştursun isteyeceğim
 from django.db.models.signals import pre_save
@@ -20,7 +21,7 @@ from .models import Post
 def pre_save_create_slug(sender,instance, **kwargs):
     #slug yoksa oluşturacak ve boşluklara tire koyacak
     if not instance.slug:
-        instance.slug = slugify(instance.author.username + " " + instance.title)
+        instance.slug = slugify(instance.title + " " + get_random_code())
 
 a= "mjs ce e"
 print(slugify(a))
