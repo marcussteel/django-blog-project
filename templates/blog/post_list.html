@@ -1,13 +1,13 @@
 {% extends 'main/base.html' %}
 
 
-{% block blockname %}
-    
+{% block content %}
+    this is post page we shouls see posts here
     {% for object in object_list %}
-        {{object.title}}
-        <img src="{{object.image.url}}" alt="" srcset="">
-        {{object.content}}
+        <h1>{{object.title}} </h1>
+        <img src="{{object.image.url}}"  alt="" srcset="">
+        <p>{{object.content|truncatechars:20 }}</p>
     {% endfor %}
         
-{% endblock blockname %}
+{% endblock content %}
     
