@@ -45,6 +45,16 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_comment_count(self):
+        return self.comment_set.all().count()
+
+    def get_view_count(self):
+        return self.postview_set.all().count()
+
+    def get_view_count(self):
+        return self.like_set.all().count()
+
 
 
 class Comment(models.Model):
@@ -72,3 +82,4 @@ class PostView(models.Model):
 
     def __str__(self):
         return self.user.username
+
