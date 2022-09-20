@@ -1,7 +1,7 @@
 from multiprocessing import context
 from tkinter import N
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm
+from .forms import CommentForm, PostForm
 from .models import Post
 from django.template.defaultfilters import slugify
 # Create your views here.
@@ -34,9 +34,26 @@ def post_create(request):
 
 
 def post_detail(request, slug):
+    form = CommentForm()
+
+
+    print("request.user : ", request.user)
+    print("request : ", request)
+    # print("request.get : ", request.get)
+
     obj = get_object_or_404(Post, slug = slug)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid:
+            print("request.user : ",request.user)
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = obj
+            comment.save()
+            return redirect("blog:detail", slug=slug)
     context = {
-    'object':obj
+    'object':obj,
+    'form' :form
     }
     return render(request, "blog/post_detail.html",context)
 
