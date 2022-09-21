@@ -7,5 +7,32 @@
         <h1>{{object.title}}</h1>
         <img src="{{object.image.url}}" alt="" srcset="" />
         <p>{{object.content}}</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit" class="btn btn-primary">Comment</button>
+        </form>
+        <br>
+        {% for comment in object.comments %}
+            <hr>
+            <p>comment by {{user}}</p>
+            <p>{{comment.content}}</p>
+            
+        {% endfor %}
+        <form action="{% url 'blog:like' object.slug %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden", name="post">
+            <input type="hidden", name="user">
+            <button type="submit">Like</button> {{object.like_count }}
+
+        </form>
+            <br>
+            
+            {% if user.id == object.author.id %}
+                <button class="btn btn-danger"><a href="{% url 'blog:delete' object.slug %}"></a>delete</button>
+                <button class="btn btn-primary"><a href="{% url 'blog:update' object.slug %}"></a>update</button>
+                
+            {% endif %}
+                
    
 {% endblock content %}
