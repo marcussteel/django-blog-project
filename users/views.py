@@ -1,15 +1,20 @@
 from multiprocessing import context
+
 from django.shortcuts import render
 from .forms import RegistrationForm, UserCreationForm, ProfileUpdateForm, UserUpdateForm
 from django.shortcuts import render, redirect
+from django.contrib import messages
 # Create your views here.
 
 def register(request):
     form=RegistrationForm(request.POST or None)
 
-
+    if request.user.is_authenticated:
+        messages.WARNING(request, "You have already account")
+        return redirect("blog:list")
     if form.is_valid():
         form.save()
+        name = form.cleaned_data['username']
         return redirect("login")
     context = {
         "form":form,
@@ -23,6 +28,7 @@ def profile(request):
     if u_form.is_valid() and p_form.is_valid():
         u_form.save()
         p_form.save()
+        messages.SUCCESS(request, "Your profile has been updated.")
         return  redirect(request.path)
 
     context = {

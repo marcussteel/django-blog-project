@@ -134,3 +134,17 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 LOGIN_REDIRECT_URL = "blog:list"
 LOGIN_URL = "login"
+
+# Sending email, email backenfi var
+# https://docs.djangoproject.com/en/4.1/topics/email/
+# alta soğru stmp backend bölümünde
+# brada gerekli bilgiler örn:gmail ayarları hepsi sağlayacıda var
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST =  "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+#kendi mailini yaz yani hangi mailden göndereceksen onu yazmalısın .env ye.
+EMAIL_HOST_USER = config("EMAIL_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_USER_PASSWORD")
