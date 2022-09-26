@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CommentForm, PostForm
 from .models import Like, Post
 from django.template.defaultfilters import slugify
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -15,6 +16,7 @@ def post_list(request):
     }
     return render(request, "blog/post_list.html", context)
 
+@login_required()
 def post_create(request):
     form = PostForm()
     if request.method == "POST":
@@ -58,6 +60,8 @@ def post_detail(request, slug):
     }
     return render(request, "blog/post_detail.html",context)
 
+
+@login_required()
 def post_update(request,slug):
     #Post.objects.get(slug=lerafsdf-dgdfg-fghfg-h )
     obj = get_object_or_404(Post, slug=slug) # bu slugtakileri bul bana  listele demek
@@ -87,6 +91,7 @@ def post_delete(request,slug):
     return render(request, "blog/post_delete.html", context)
 
 
+@login_required()
 def like(request, slug):
     if request.method == "POST":
         obj = obj = get_object_or_404(Post, slug=slug)
