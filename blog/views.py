@@ -6,6 +6,7 @@ from .forms import CommentForm, PostForm
 from .models import Like, Post
 from django.template.defaultfilters import slugify
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 
@@ -28,6 +29,7 @@ def post_create(request):
             print(request.user)
             post.author = request.user
             post.save()
+            messages.SUCCESS(request, "Post created succesfully")
             # urls'e  app_name = "blog"  ekleyerek hangi appteki list olduğunu belirlemiş olduk
             return redirect("blog:list")
     context = {
@@ -67,10 +69,12 @@ def post_update(request,slug):
     obj = get_object_or_404(Post, slug=slug) # bu slugtakileri bul bana  listele demek
     #if req pos ise yerine bunu kullandık
     if request.user.id != obj.author.id:
+        messages.WARNING(request, "You r nor a author of this tag")
         return redirect("blog:list", slug=slug)
     form = PostForm(request.POST or None, request.FILES or None, instance=obj)
     if form.is_valid():
         form.save()
+        messages.SUCCESS(request, "Post updated succesfully")
         return redirect("blog:list")
     context={
         "object":obj,
@@ -78,12 +82,15 @@ def post_update(request,slug):
     }
     return render(request, "blog/post_update.html", context)
 
+
+@login_required()
 def post_delete(request,slug):
     obj = get_object_or_404(Post, slug=slug)
     if request.user.id != obj.author.id:
         return HTTPResponse('You are not authorized !')
     if request.method == "POST":
         obj.delete()
+        messages.SUCCESS(request, "Post deleted succesfully")
         return redirect("blog:list")
     context = {
         "object": obj,
